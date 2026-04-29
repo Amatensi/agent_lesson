@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>从大模型到智能体 - OpenClaw 企业培训</title>
+    <meta
+      name="description"
+      content="OpenClaw 企业培训课程演示门户，围绕大模型、智能体、RAG、Skills、多智能体和企业落地案例展开。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#home" aria-label="返回首页">
+        <span class="brand-mark">OC</span>
+        <span>
+          <strong>OpenClaw</strong>
+          <small>企业培训</small>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a href="#home">首页</a>
+        <a href="#basics">基础概念</a>
+        <a href="#agent-core">智能体核心</a>
+        <a href="#development">发展与实践</a>
+        <a href="#cases">实战案例</a>
+      </nav>
+
+      <a class="header-action" href="#basics">开始学习</a>
+    </header>
+
+    <main>
+      <section class="hero section-shell course-section" id="home" data-page-name="概念">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">90分钟认知升级与实操落地</p>
+          <h1>从大模型到智能体</h1>
+          <p class="hero-subtitle">把 LLM 的“回答能力”升级为 Agent 的“业务执行力”</p>
+          <p class="hero-text">
+            面向企业业务负责人、产品团队与技术架构师，以“概念、区别、核心、路径、落地”为主线，演示如何从大模型认知过渡到智能体实践。
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#agenda">查看课程路线</a>
+            <a class="button secondary" href="#agent-core">体验互动演示</a>
+          </div>
+        </div>
+
+        <div class="hero-panel reveal" aria-label="课程统计">
+          <div class="metric">
+            <strong>45min</strong>
+            <span>基础讲解</span>
+          </div>
+          <div class="metric">
+            <strong>45min</strong>
+            <span>平台演示</span>
+          </div>
+          <div class="metric">
+            <strong>5</strong>
+            <span>阶段认知闭环</span>
+          </div>
+          <div class="metric">
+            <strong>3</strong>
+            <span>场景业务实操</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-shell section-block" id="agenda">
+        <div class="section-heading reveal">
+          <p class="eyebrow">学习路径</p>
+          <h2>课程目标与议程</h2>
+          <p>
+            通过五个阶段完成完整认知闭环，从概念理解、差异对比、核心架构、实施路径到最终落地实践。
+          </p>
+        </div>
+
+        <div class="agenda-cards reveal">
+          <article class="agenda-card">
+            <span>01</span>
+            <h3>理论篇</h3>
+            <strong>45分钟基础概念学习</strong>
+            <p>大语言模型原理、神经网络、注意力机制。</p>
+          </article>
+          <article class="agenda-card">
+            <span>02</span>
+            <h3>智能体篇</h3>
+            <strong>25分钟核心架构解析</strong>
+            <p>Agent 定义对比、核心框架、发展历程。</p>
+          </article>
+          <article class="agenda-card">
+            <span>03</span>
+            <h3>实践篇</h3>
+            <strong>20分钟平台功能演示</strong>
+            <p>Skills 系统、RAG 技术、多智能体设计。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell section-block alt-band course-section" id="basics" data-page-name="区别">
+        <div class="page-header reveal">
+          <p class="eyebrow">基础概念</p>
+          <h2>深入理解大语言模型的核心原理与演进历程</h2>
+        </div>
+
+        <div class="content-stack">
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P3</span>
+              <h3>AI演进历程</h3>
+            </div>
+            <div class="timeline">
+              <div class="timeline-item">
+                <span>2010s</span>
+                <h4>传统AI与深度学习</h4>
+                <p>基于规则的专家系统，CNN/RNN 等神经网络架构在图像和语音领域取得突破。2012 年 AlexNet 在 ImageNet 竞赛中夺冠，标志着深度学习时代的到来。</p>
+              </div>
+              <div class="timeline-item">
+                <span>2017</span>
+                <h4>Transformer架构</h4>
+                <p>Google 发表《Attention is All You Need》论文，自注意力机制彻底改变 NLP 领域，并成为后续大语言模型的基础。</p>
+              </div>
+              <div class="timeline-item">
+                <span>2018-2020</span>
+                <h4>预训练模型时代</h4>
+                <p>BERT、GPT-2 等预训练模型出现，通过大规模无监督学习获得强大语言理解能力，少样本学习能力开始显现。</p>
+              </div>
+              <div class="timeline-item">
+                <span>2020-2022</span>
+                <h4>大语言模型时代</h4>
+                <p>GPT-3、ChatGPT 等模型涌现，Scaling Law 被验证，模型具备推理、代码、翻译等跨领域能力。</p>
+              </div>
+              <div class="timeline-item">
+                <span>2023</span>
+                <h4>Agent概念兴起</h4>
+                <p>AutoGPT 等自主智能体出现，LangChain 生态繁荣，AI 开始具备工具使用能力，RAG 技术成熟。</p>
+              </div>
+              <div class="timeline-item">
+                <span>2024+</span>
+                <h4>智能体与多模态</h4>
+                <p>多 Agent 协作成为主流，视觉、语音、文本协同工作，具身智能开始探索物理世界。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P4</span>
+              <h3>什么是大语言模型</h3>
+            </div>
+            <div class="formula-card">LLM = 海量数据 + 巨量参数 + 强大算力</div>
+            <div class="note-block">
+              <strong>核心本质</strong>
+              <p>
+                大语言模型本质上是一个“下一个 Token 的概率预测机”。通过 Scaling Law，当数据量、参数量和算力足够大时，模型能力会产生质的飞跃，涌现出理解、推理、生成等复杂能力。
+              </p>
+            </div>
+          </article>
+
+          <article class="content-card reveal" id="neural-demo">
+            <div class="card-heading">
+              <span>P5</span>
+              <h3>核心机制：神经网络</h3>
+            </div>
+            <div class="network-demo">
+              <div class="nn-diagram" aria-label="神经网络层级演示">
+                <div class="nn-layer">
+                  <b id="nn-input-1">满血</b>
+                  <b id="nn-input-2">苹果</b>
+                  <b id="nn-input-3">手机</b>
+                  <small>输入层</small>
+                </div>
+                <i>→</i>
+                <div class="nn-layer">
+                  <b id="nn-weight-1">W1</b>
+                  <b id="nn-weight-2">W2</b>
+                  <b id="nn-weight-3">W3</b>
+                  <small>权重层</small>
+                </div>
+                <i>→</i>
+                <div class="nn-layer">
+                  <b id="nn-active-1">ReLU</b>
+                  <b id="nn-active-2">Sigmoid</b>
+                  <small>激活层</small>
+                </div>
+                <i>→</i>
+                <div class="nn-layer">
+                  <b id="nn-output-1">输出</b>
+                  <small>输出层</small>
+                </div>
+              </div>
+              <div class="explain-box" id="nn-explanation">
+                <strong>点击下方按钮开始演示</strong>
+                <p>神经网络由输入层、权重层、激活层和输出层组成。输入层接收原始数据，权重层进行加权处理，激活层引入非线性变换，输出层产生最终结果。</p>
+              </div>
+              <button class="button primary" id="run-neural">运行神经网络演示</button>
+            </div>
+          </article>
+
+          <article class="content-card reveal" id="attention-demo">
+            <div class="card-heading">
+              <span>P6</span>
+              <h3>核心机制：自注意力机制</h3>
+            </div>
+            <div class="original-text">
+              <span>原文</span>
+              <strong>满血苹果手机搭载AI功能，这使得它很强大</strong>
+            </div>
+            <div class="attention-sentence" aria-label="点击词语查看注意力关系">
+              <button class="attention-word">满血</button>
+              <button class="attention-word attention-source">苹果</button>
+              <button class="attention-word attention-source">手机</button>
+              <button class="attention-word">搭载</button>
+              <button class="attention-word">AI</button>
+              <button class="attention-word">功能</button>
+              <button class="attention-word">这</button>
+              <button class="attention-word">使得</button>
+              <button class="attention-word" data-pronoun>它</button>
+              <button class="attention-word">很</button>
+              <button class="attention-word">强大</button>
+            </div>
+            <div class="explain-box active" id="attention-result">
+              “它” 指代的是：苹果手机
+            </div>
+            <p class="muted-copy">自注意力机制让模型能够同时关注上下文中的所有词，理解词与词之间的语义关系。点击“它”可以查看它与“苹果手机”的强关联。</p>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P7</span>
+              <h3>LLM的能力边界</h3>
+            </div>
+            <div class="boundary-grid">
+              <div class="boundary-card good">
+                <h4>擅长领域</h4>
+                <p>✓ 文本生成与内容创作</p>
+                <p>✓ 代码编写与调试辅助</p>
+                <p>✓ 逻辑推理与问题分析</p>
+              </div>
+              <div class="boundary-card weak">
+                <h4>需要补强</h4>
+                <p>✗ 实时信息获取能力</p>
+                <p>✗ 精确执行操作能力</p>
+                <p>✗ 私有知识整合能力</p>
+                <p>✗ 幻觉问题需要解决</p>
+              </div>
+            </div>
+            <div class="note-block conclusion">
+              <strong>结论</strong>
+              <p>LLM 是一个极其强大的“大脑”，但缺乏“手脚”和“实时记忆”，这就是为什么我们需要智能体。</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell section-block course-section" id="agent-core" data-page-name="核心">
+        <div class="page-header reveal">
+          <p class="eyebrow">智能体核心</p>
+          <h2>从概念到架构，全面理解 Agent 的设计与实现</h2>
+        </div>
+
+        <div class="content-stack">
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P8</span>
+              <h3>定义对比：LLM vs Agent</h3>
+            </div>
+            <div class="agent-comparison">
+              <div class="agent-card brain-card">
+                <div class="agent-visual">LLM</div>
+                <h4>仅仅是一个强大的大脑</h4>
+                <ul>
+                  <li>可以进行丰富的对话交流</li>
+                  <li>具备强大的决策和推理能力</li>
+                  <li>理解复杂概念和问题</li>
+                  <li>但是没有肢体，无法实际行动</li>
+                  <li>无法直接操作工具或环境</li>
+                </ul>
+              </div>
+              <div class="agent-card body-card">
+                <div class="agent-visual">Agent</div>
+                <h4>大脑 + 钢铁般的躯体 + 工具技能</h4>
+                <ul>
+                  <li>同样具备强大的 LLM 大脑</li>
+                  <li>拥有执行能力和环境感知能力</li>
+                  <li>配备知识库、API、数据库等工具</li>
+                  <li>能够做出决策并独立执行</li>
+                  <li>完成复杂的多步骤任务</li>
+                </ul>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P22-P27</span>
+              <h3>智能体发展历程</h3>
+            </div>
+            <div class="evolution-list">
+              <div>
+                <span>2023年初</span>
+                <h4>AutoGPT时代</h4>
+                <p>概念验证探索阶段，Agent 初步展现自主任务执行能力，但稳定性和可控性较差。</p>
+              </div>
+              <div>
+                <span>2023中</span>
+                <h4>LangChain生态</h4>
+                <p>全代码时代，提供丰富组件库，开发者可自由组合构建 Agent 应用。</p>
+              </div>
+              <div>
+                <span>2023末-2024</span>
+                <h4>低代码平台兴起</h4>
+                <p>可视化编排平台出现，大幅降低 Agent 开发门槛，非技术人员也可参与。</p>
+              </div>
+              <div>
+                <span>2024+</span>
+                <h4>生态协同与多Agent</h4>
+                <p>专业化 Agent 分工明确，协同完成复杂任务。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal" id="flight-demo">
+            <div class="card-heading">
+              <span>P13</span>
+              <h3>案例对比：预订机票</h3>
+            </div>
+            <div class="booking-lab">
+              <div class="booking-card">
+                <h4>常规方式</h4>
+                <div class="phone-mini" aria-label="常规机票预订流程">
+                  <div class="manual-step active" id="manual-0">
+                    <strong>机票预订</strong>
+                    <p>单程 / 往返</p>
+                    <p>出发城市：北京</p>
+                    <p>到达城市：上海</p>
+                    <p>出发日期：12月25日</p>
+                  </div>
+                  <div class="manual-step" id="manual-1">
+                    <strong>航班列表</strong>
+                    <p>CA1234 ¥1,280 08:30-11:00</p>
+                    <p>MU5678 ¥980 14:00-16:15</p>
+                  </div>
+                  <div class="manual-step" id="manual-2">
+                    <strong>填写信息</strong>
+                    <p>乘客姓名</p>
+                    <p>身份证号</p>
+                    <p>联系电话</p>
+                  </div>
+                  <div class="manual-step" id="manual-3">
+                    <strong>支付订单</strong>
+                    <p>航班 CA1234</p>
+                    <p>乘客 张三</p>
+                    <p>立即支付 ¥1,280</p>
+                  </div>
+                  <div class="manual-step" id="manual-4">
+                    <strong>预订成功</strong>
+                    <p>订单号 CA123420241225</p>
+                    <p>时间 12月25日 08:30</p>
+                  </div>
+                </div>
+                <div class="inline-actions">
+                  <button class="button secondary compact" id="manual-next">下一步</button>
+                  <button class="button ghost compact" id="manual-reset">重新演示</button>
+                </div>
+              </div>
+
+              <div class="booking-card accent">
+                <h4>Agent方式</h4>
+                <div class="agent-flow-box">
+                  <div class="agent-step active" id="agent-0">
+                    <strong>用户指令</strong>
+                    <p>帮我订一张明天北京飞上海的机票</p>
+                  </div>
+                  <div class="agent-step" id="agent-1">
+                    <strong>Agent执行</strong>
+                    <p>🔍 查询航班中</p>
+                    <p>📊 对比价格中</p>
+                  </div>
+                  <div class="agent-step" id="agent-2">
+                    <strong>预订完成</strong>
+                    <p>机票已预订成功</p>
+                    <p>航班信息已发送至您的邮箱</p>
+                  </div>
+                </div>
+                <div class="inline-actions">
+                  <button class="button primary compact" id="agent-run">自动执行</button>
+                  <button class="button ghost compact" id="agent-reset">重新演示</button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P14-P21</span>
+              <h3>智能体核心架构</h3>
+            </div>
+            <div class="core-architecture">
+              <div>
+                <span>知识检索</span>
+                <h4>检索增强生成</h4>
+                <p>连接知识库和文档，向量相似度检索，减少幻觉问题，提供可追溯来源。</p>
+              </div>
+              <div>
+                <span>技能调用</span>
+                <h4>技能系统</h4>
+                <p>工具调用和 API，自定义技能开发，插件生态系统，灵活可扩展。</p>
+              </div>
+              <div>
+                <span>记忆存储</span>
+                <h4>记忆系统</h4>
+                <p>短期对话记忆、长期用户偏好、上下文连续性和经验学习。</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell section-block alt-band course-section" id="development" data-page-name="路径">
+        <div class="page-header reveal">
+          <p class="eyebrow">发展与实践</p>
+          <h2>从理论到落地，深入了解 RAG、Skills 和多智能体设计</h2>
+        </div>
+
+        <div class="content-stack">
+          <article class="content-card reveal" id="rag-demo">
+            <div class="card-heading">
+              <span>P17-P18</span>
+              <h3>RAG检索增强生成技术</h3>
+            </div>
+            <div class="note-block">
+              <strong>什么是RAG？</strong>
+              <p>
+                RAG 是一种将信息检索与文本生成相结合的技术。它先从知识库中检索相关信息，再将检索内容作为上下文提供给 LLM 回答，从而提升准确性和可信度，减少幻觉。
+              </p>
+            </div>
+            <div class="rag-lab">
+              <div class="rag-source">
+                <span>知识库源文档</span>
+                <p>小明是我所的员工，专精于婚姻民事诉讼相关领域。</p>
+              </div>
+              <div class="rag-steps">
+                <div class="rag-step" id="rag-0"><b>01 用户输入</b><p id="rag-c0">等待输入</p></div>
+                <div class="rag-step" id="rag-1"><b>02 向量化</b><p id="rag-c1">等待处理</p></div>
+                <div class="rag-step" id="rag-2"><b>03 检索知识库</b><p id="rag-c2">等待检索</p></div>
+                <div class="rag-step" id="rag-3"><b>04 注入Prompt</b><p id="rag-c3">等待注入</p></div>
+                <div class="rag-step" id="rag-4"><b>05 生成答案</b><p id="rag-c4">等待生成</p></div>
+              </div>
+              <div class="rag-final" id="rag-output">
+                <span>最终答案：</span>
+                <p id="rag-answer">等待 RAG 演示运行。</p>
+              </div>
+            </div>
+            <button class="button primary" id="run-rag">运行RAG演示</button>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P15-P16</span>
+              <h3>Skills技能系统详解</h3>
+            </div>
+            <div class="note-block">
+              <strong>什么是Skills？</strong>
+              <p>
+                Skills 是智能体的“手脚”，它们是可重用的功能模块，让 Agent 能够执行具体任务。每个 Skill 都包含输入参数、执行逻辑和输出结果，可以独立调用也可以组合使用。
+              </p>
+            </div>
+            <div class="value-list">
+              <span>模块化设计，易于维护和扩展</span>
+              <span>可重用性，同一 Skill 可用于多个场景</span>
+              <span>标准化接口，方便集成外部 API</span>
+              <span>安全可控，权限可细粒度管理</span>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P31</span>
+              <h3>OpenClaw Skills生态</h3>
+            </div>
+            <div class="skill-ecosystem">
+              <div><strong>网页搜索</strong><p>实时搜索互联网获取最新信息</p></div>
+              <div><strong>数据库查询</strong><p>SQL 查询、数据库读写操作</p></div>
+              <div><strong>文档处理</strong><p>文档解析、内容提取、格式转换</p></div>
+              <div><strong>邮件发送</strong><p>邮件通知、批量发送、模板</p></div>
+            </div>
+            <div class="code-window" aria-label="Skill 定义格式示例">
+<pre>---
+name: crawler
+description: 龙虾招聘网站爬虫
+parameters:
+  - name: keyword
+    type: string
+    required: true
+  - name: location
+    type: string
+    default: 北京
+---
+def execute(keyword, location):
+    url = f"https://example.com/jobs?keyword={keyword}&loc={location}"
+    data = fetch_data(url)
+    return { "success": True, "results": data }</pre>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P32-P33</span>
+              <h3>多智能体系统设计</h3>
+            </div>
+            <div class="multi-agent">
+              <div class="manager-agent">Manager Agent<br /><small>任务分配、协调调度</small></div>
+              <div class="worker-grid">
+                <span>Data Analyst<br /><small>数据分析</small></span>
+                <span>Content Writer<br /><small>内容生成</small></span>
+                <span>Researcher<br /><small>资料调研</small></span>
+                <span>Reviewer<br /><small>质量检查</small></span>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P29-P35</span>
+              <h3>业界代表方案与OpenClaw架构</h3>
+            </div>
+            <div class="framework-grid">
+              <div>
+                <h4>OpenClaw架构</h4>
+                <p>可视化编排界面、低代码 Agent 构建、内置丰富 Skills 库、企业级权限管理。</p>
+              </div>
+              <div>
+                <h4>Hermes架构</h4>
+                <p>Function Calling 优先、深度工具集成、结构化输出、多轮对话优化。</p>
+              </div>
+              <div>
+                <h4>Kimi 2.6架构</h4>
+                <p>超长上下文处理、国产大模型、企业数据安全、API 友好设计。</p>
+              </div>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>P42-P44</span>
+              <h3>总结与展望</h3>
+            </div>
+            <div class="implementation-road">
+              <div><span>01</span><h4>找高频简单场景</h4><p>从 Low Hanging Fruit 切入，选择重复性高、规则明确的场景。</p></div>
+              <div><span>02</span><h4>构建原子技能</h4><p>坚持模块化设计原则，沉淀可复用的基础技能库。</p></div>
+              <div><span>03</span><h4>迭代复杂链路</h4><p>组合基础技能构建流程，闭环优化，最终交付端到端解决方案。</p></div>
+            </div>
+            <div class="future-grid">
+              <span>具身智能<br /><small>Embodied AI</small></span>
+              <span>自主进化<br /><small>Self-evolving</small></span>
+              <span>多模态协同<br /><small>Multi-modal</small></span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell section-block course-section" id="cases" data-page-name="落地">
+        <div class="page-header reveal">
+          <p class="eyebrow">实战案例</p>
+          <h2>企业级智能体落地实践案例分享</h2>
+        </div>
+
+        <div class="content-stack">
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>Case 01</span>
+              <h3>企业知识库智能助手</h3>
+            </div>
+            <div class="case-layout">
+              <div class="note-block">
+                <strong>需求背景</strong>
+                <p>某金融机构拥有大量内部文档、规章制度和历史案例，员工查找信息困难，新人培训成本高。希望通过智能体技术，让员工用自然语言快速获取所需信息。</p>
+              </div>
+              <div class="case-list">
+                <h4>技术方案</h4>
+                <p>RAG技术：构建企业知识库向量库</p>
+                <p>文档处理：支持 PDF、Word、PPT 等格式</p>
+                <p>对话记忆：保持上下文连贯性</p>
+                <p>权限控制：根据用户角色返回不同信息</p>
+              </div>
+            </div>
+            <div class="impact-metrics">
+              <span><strong>75%</strong>信息检索效率提升</span>
+              <span><strong>60%</strong>新人培训时间减少</span>
+              <span><strong>40%</strong>客服响应速度提升</span>
+              <span><strong>95%</strong>员工满意度</span>
+            </div>
+          </article>
+
+          <article class="content-card reveal">
+            <div class="card-heading">
+              <span>Case 02</span>
+              <h3>电商智能客服系统</h3>
+            </div>
+            <div class="service-steps">
+              <div><span>01</span><h4>意图识别</h4><p>理解用户问题，自动分类问题类型。</p></div>
+              <div><span>02</span><h4>多技能调用</h4><p>查询订单、物流、库存、退款等多个技能。</p></div>
+              <div><span>03</span><h4>智能转接</h4><p>复杂问题自动转人工，无缝衔接。</p></div>
+            </div>
+            <div class="closing-banner">
+              平均响应时间从 45 秒降至 3 秒，客服人工成本降低 60%
+            </div>
+          </article>
+
+          <div class="closing reveal">
+            <p>OpenClaw 企业培训</p>
+            <h2>从“知道 Agent”到“落地 Agent”</h2>
+            <a class="button primary" href="#home">回到首页</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-jump" aria-label="课程页跳转">
+      <a href="#home">概念</a>
+      <a href="#basics">区别</a>
+      <a href="#agent-core">核心</a>
+      <a href="#development">路径</a>
+      <a href="#cases">落地</a>
+    </nav>
+
+    <div class="page-controls" aria-label="上一页下一页">
+      <button class="nav-btn" id="prev-page">← 上一页</button>
+      <button class="nav-btn primary" id="next-page">下一页 →</button>
+    </div>
+
+    <div class="page-indicator" id="page-indicator">第 1 / 5 页</div>
+
+    <footer class="site-footer">
+      <span>《从大模型到智能体：认知升级与实操落地》演示门户</span>
+      <a href="#home">OpenClaw</a>
+    </footer>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

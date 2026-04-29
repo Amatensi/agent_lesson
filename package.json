@@ -1,0 +1,10 @@
+{
+  "name": "openclaw-course-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive course portal for 从大模型到智能体：认知升级与实操落地",
+  "scripts": {
+    "start": "node server.js",
+    "preview": "node server.js"
+  }
+}
