@@ -1,15 +1,2815 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="refresh" content="0; url=./index.html" />
-    <title>OpenClaw Course Demo</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>从大模型到智能体 - OpenClaw企业培训</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f6f9f8;
+            background-image: 
+                linear-gradient(rgba(134, 239, 172, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(134, 239, 172, 0.1) 1px, transparent 1px);
+            background-size: 60px 60px;
+            color: #111827;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated background lines */
+        .bg-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-line {
+            position: absolute;
+            border: 1px solid rgba(45, 212, 191, 0.25);
+            border-radius: 2px;
+            animation: floatLine 12s infinite ease-in-out;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: 50%;
+            animation: floatCircle 15s infinite ease-in-out;
+        }
+
+        .bg-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(5, 150, 105, 0.3);
+            border-radius: 50%;
+            animation: floatDot 10s infinite ease-in-out;
+        }
+
+        @keyframes floatLine {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.25; }
+            25% { transform: translate(15px, -10px) rotate(3deg); opacity: 0.4; }
+            50% { transform: translate(25px, -25px) rotate(0deg); opacity: 0.5; }
+            75% { transform: translate(10px, -15px) rotate(-3deg); opacity: 0.35; }
+        }
+
+        @keyframes floatCircle {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+            50% { transform: translate(30px, -20px) scale(1.15); opacity: 0.3; }
+        }
+
+        @keyframes floatDot {
+            0%, 100% { transform: translate(0, 0); opacity: 0.3; }
+            50% { transform: translate(10px, -15px); opacity: 0.5; }
+        }
+
+        /* SVG Icons styles */
+        .icon { width: 24px; height: 24px; display: inline-block; }
+        .icon-large { width: 64px; height: 64px; }
+        .icon-xl { width: 120px; height: 120px; }
+
+        /* Top Navigation */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: transparent;
+            border-bottom: none;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 60px;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+
+        .top-nav.scrolled {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .nav-link {
+            padding: 10px 18px;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #059669;
+        }
+
+        .nav-link.active {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .nav-cta {
+            padding: 10px 24px;
+            background: #1f2937;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            background: #111827;
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 72px;
+            display: flex;
+            min-height: calc(100vh - 72px);
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 40px 60px 120px;
+        }
+
+        /* Slide Container */
+        .slide {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 80px 0;
+        }
+
+        .hero-banner {
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .hero-layout {
+            display: flex;
+            flex-direction: row;
+            gap: 80px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-left {
+            text-align: left;
+            flex: 1;
+        }
+
+        .hero-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #111827;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: #374151;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .hero-stat {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            transition: all 0.2s;
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-6px);
+            border-color: #a7f3d0;
+            box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15);
+        }
+
+        .hero-stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #059669;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .hero-start-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-right: 12px;
+        }
+
+        .hero-start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(16,185,129,0.3);
+        }
+
+        .hero-illustration {
+            width: 100%;
+            max-width: 520px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Cards */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card + .card {
+            margin-top: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .card-description {
+            color: #4b5563;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* Step Boxes */
+        .step-box {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .step-box:hover {
+            border-color: #d1d5db;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #059669;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .step-desc {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 80px;
+            padding-bottom: 40px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 12px;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #10b981;
+            border: 4px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+        }
+
+        .timeline-year {
+            font-size: 20px;
+            font-weight: 800;
+            color: #059669;
+            margin-bottom: 8px;
+        }
+
+        .timeline-text {
+            font-weight: 700;
+            font-size: 18px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .timeline-subtext {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* Formula Box */
+        .formula-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #ecfdf5 100%);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        /* Neural Network */
+        .neural-network {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .nn-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .nn-layer {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .nn-layer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 12px;
+        }
+
+        .nn-node {
+            width: 60px;
+            height: 60px;
+            background: #e5e7eb;
+            border: 3px solid #d1d5db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 12px;
+            transition: all 0.5s ease;
+        }
+
+        .nn-node.active {
+            background: #d1fae5;
+            border-color: #059669;
+            color: #065f46;
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(16,185,129,0.1);
+        }
+
+        .nn-arrow {
+            font-size: 32px;
+            color: #9ca3af;
+            font-weight: 300;
+        }
+
+        .nn-explanation {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+        }
+
+        .nn-explanation-title {
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 12px;
+        }
+
+        .nn-explanation-text {
+            color: #4b5563;
+            line-height: 1.7;
+        }
+
+        .run-nn-btn {
+            margin-top: 24px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .run-nn-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(37,99,235,0.3);
+        }
+
+        /* Attention Mechanism */
+        .attention-section {
+            margin-top: 40px;
+        }
+
+        .attention-sentence {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 32px 0;
+        }
+
+        .attention-word {
+            padding: 14px 18px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #374151;
+        }
+
+        .attention-word:hover {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+        }
+
+        .attention-word.target {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #d97706;
+        }
+
+        .attention-word.connected {
+            background: #d1fae5;
+            border-color: #059669;
+            color: #1e40af;
+        }
+
+        .original-text {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .original-text-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #d97706;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .original-text-content {
+            font-size: 18px;
+            font-weight: 600;
+            color: #92400e;
+        }
+
+        /* Agent Comparison */
+        .agent-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .agent-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .agent-image-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 24px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .agent-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .agent-title-large {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        .agent-desc-large {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .agent-desc-large ul {
+            margin-top: 16px;
+            padding-left: 20px;
+        }
+
+        .agent-desc-large li {
+            margin-bottom: 8px;
+        }
+
+        /* Phone Mockup */
+        .phone-section {
+            margin-top: 40px;
+        }
+
+        .phone-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 560px;
+            background: #1f2937;
+            border-radius: 40px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            padding: 14px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .phone-content {
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 32px 20px;
+        }
+
+        .phone-content.active {
+            display: flex;
+        }
+
+        .phone-header {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #111827;
+        }
+
+        .phone-btn {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: auto;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .phone-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px -5px rgba(37,99,235,0.3);
+        }
+
+        .phone-btn-secondary {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            color: #059669;
+        }
+
+        .phone-input {
+            padding: 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #111827;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .phone-success {
+            text-align: center;
+            padding: 60px 16px;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .phone-label {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        /* Architecture */
+        .architecture-diagram {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 40px 30px;
+            margin-top: 32px;
+            position: relative;
+        }
+
+        .arch-center {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            color: white;
+            width: 220px;
+            margin: 0 auto 50px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .arch-center .arch-center-text {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .arch-modules {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .arch-module {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            z-index: 5;
+            position: relative;
+        }
+
+        .arch-module:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px -6px rgba(0,0,0,0.18);
+            border-color: #059669;
+        }
+
+        .arch-module-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .arch-module-desc {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .arch-connections {
+            position: absolute;
+            top: 180px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            pointer-events: none;
+        }
+
+        .arch-connection-label {
+            position: absolute;
+            background: #ffffff;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #059669;
+            border: 2px solid #d1fae5;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .arch-arrow {
+            stroke: #94a3b8;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* RAG */
+        .rag-section {
+            margin-top: 40px;
+        }
+
+        .rag-flow {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .rag-step {
+            padding: 24px 16px;
+            background: #ffffff;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .rag-step.active {
+            border-color: #059669;
+            background: #ecfdf5;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .rag-step-number {
+            width: 32px;
+            height: 32px;
+            background: #e5e7eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        .rag-step.active .rag-step-number {
+            background: #059669;
+            color: white;
+        }
+
+        .rag-step-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .rag-step-content {
+            font-size: 12px;
+            color: #6b7280;
+            min-height: 48px;
+            line-height: 1.5;
+        }
+
+        .rag-btn {
+            margin-top: 24px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .rag-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(37,99,235,0.3);
+        }
+
+        .rag-source-doc {
+            background: #fffbeb;
+            border: 2px solid #fcd34d;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .rag-source-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #92400e;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .rag-source-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #78350f;
+        }
+
+        .rag-output {
+            margin-top: 32px;
+            padding: 28px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
+
+        .rag-output.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rag-output-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #059669;
+            margin-bottom: 12px;
+        }
+
+        .rag-output-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #111827;
+        }
+
+        /* Skills */
+        .skills-intro {
+            background: #ecfdf5;
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .skill-card:hover {
+            border-color: #d1d5db;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+
+        .skill-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .skill-card-desc {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #1f2937;
+            border-radius: 12px;
+            padding: 28px;
+            font-family: 'SF Mono', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #e5e7eb;
+            text-align: left;
+            margin-top: 24px;
+        }
+
+        /* Multi-Agent */
+        .multi-agent-section {
+            margin-top: 40px;
+        }
+
+        .multi-agent-diagram {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .manager-agent {
+            background: linear-gradient(135deg, #ecfdf5, #ecfdf5);
+            border: 2px solid #059669;
+            border-radius: 12px;
+            padding: 28px 48px;
+            text-align: center;
+            max-width: 300px;
+            margin: 0 auto 32px;
+        }
+
+        .worker-agents {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .worker-agent {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px 24px;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .agent-explanation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .agent-explanation-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .agent-explanation-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #059669;
+        }
+
+        .agent-explanation-content {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .agent-explanation-content ul {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+
+        .agent-explanation-content li {
+            margin-bottom: 6px;
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: fixed;
+            bottom: 100px;
+            right: 60px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            padding: 14px 28px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border: none;
+            color: white;
+        }
+
+        .nav-btn.primary:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .page-indicator {
+            position: fixed;
+            bottom: 100px;
+            left: 60px;
+            font-size: 14px;
+            color: #9ca3af;
+            background: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-area {
+                padding: 32px 24px;
+            }
+            .top-nav {
+                padding: 0 24px;
+            }
+            .grid-2, .grid-3, .grid-4, .rag-flow {
+                grid-template-columns: 1fr;
+            }
+            .agent-comparison {
+                grid-template-columns: 1fr;
+            }
+            .phone-comparison {
+                grid-template-columns: 1fr;
+            }
+            .arch-modules {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animated Lines -->
+    <div class="bg-lines" id="bgLines"></div>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-brand">
+                        <img src="logo.png" alt="OpenClaw" style="height: 17px;">
+                    </div>
+                    <div class="nav-links">
+                        <div class="nav-link active" onclick="goToSlide(0);">首页</div>
+                        <div class="nav-link" onclick="goToSlide(1);">基础概念</div>
+                        <div class="nav-link" onclick="goToSlide(2);">智能体核心</div>
+                        <div class="nav-link" onclick="goToSlide(3);">智能体技术总览</div>
+                        <div class="nav-link" onclick="goToSlide(4);">实战案例</div>
+                        <button class="nav-cta" onclick="goToSlide(0);">开始学习</button>
+                    </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Slide 0: Home -->
+            <div class="slide active" id="slide-0">
+                <div class="hero-section">
+                    <div class="hero-banner">
+                        <div class="hero-layout">
+                            <div class="hero-left">
+                                <div style="color: #059669; font-weight: 600; font-size: 14px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">90分钟认知升级与实操落地</div>
+                                <h1 class="hero-title">从大模型到智能体</h1>
+                                <p class="hero-subtitle">把 LLM 的“回答能力”升级为 Agent 的“业务执行力”</p>
+                                <p style="color: #4b5563; font-size: 16px; margin-bottom: 32px; line-height: 1.6;">面向企业业务负责人、产品团队与技术架构师，以“概念、区别、核心、路径、落地”为主线，演示如何从大模型认知过渡到智能体实践。</p>
+                                <button class="hero-start-btn" onclick="goToSlide(1);">开始学习</button>
+                            </div>
+                            <div class="hero-right">
+                                <div class="hero-stats">
+                                    <div class="hero-stat">
+                                        <div class="hero-stat-number">45min</div>
+                                        <div class="hero-stat-label">基础讲解</div>
+                                    </div>
+                                    <div class="hero-stat">
+                                        <div class="hero-stat-number">45min</div>
+                                        <div class="hero-stat-label">平台演示</div>
+                                    </div>
+                                    <div class="hero-stat">
+                                        <div class="hero-stat-number">5</div>
+                                        <div class="hero-stat-label">阶段认知闭环</div>
+                                    </div>
+                                    <div class="hero-stat">
+                                        <div class="hero-stat-number">3</div>
+                                        <div class="hero-stat-label">场景业务实操</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course Objectives -->
+                    <div class="section">
+                        <h2 class="section-title">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            课程目标与议程
+                        </h2>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12,6 12,12 16,14"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="card-title">学习路径</div>
+                            </div>
+                            <div class="card-description">
+                                通过五个阶段完成完整认知闭环，从概念理解、差异对比、核心架构、实施路径到最终落地实践。
+                            </div>
+                        </div>
+
+                        <div class="grid-3" style="margin-top: 32px;">
+                            <div class="step-box">
+                                <div class="step-number">01</div>
+                                <div class="step-title">理论篇</div>
+                                <div class="step-desc">45分钟基础概念学习<br>大语言模型原理、神经网络、注意力机制</div>
+                            </div>
+                            <div class="step-box">
+                                <div class="step-number">02</div>
+                                <div class="step-title">智能体篇</div>
+                                <div class="step-desc">25分钟核心架构解析<br>Agent定义对比、核心框架、发展历程</div>
+                            </div>
+                            <div class="step-box">
+                                <div class="step-number">03</div>
+                                <div class="step-title">实践篇</div>
+                                <div class="step-desc">20分钟平台功能演示<br>Skills系统、RAG技术、多智能体设计</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 1: Basic Concepts -->
+            <div class="slide" id="slide-1">
+                <div class="page-header">
+                    <h1 class="page-title">基础概念</h1>
+                    <p class="page-subtitle">深入理解大语言模型的核心原理与演进历程</p>
+                </div>
+
+                <!-- AI Evolution -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
+                        AI演进历程
+                    </h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2010s</div>
+                            <div class="timeline-text">传统AI与深度学习</div>
+                            <div class="timeline-subtext">
+                                基于规则的专家系统，CNN/RNN等神经网络架构在图像和语音领域取得突破。
+                                2012年AlexNet在ImageNet竞赛中夺冠，标志着深度学习时代的到来。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2017</div>
+                            <div class="timeline-text">Transformer架构</div>
+                            <div class="timeline-subtext">
+                                Google发表《Attention is All You Need》论文，自注意力机制彻底改变NLP领域。
+                                该架构成为后续所有大语言模型的基础，并行计算能力大幅提升。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2018-2020</div>
+                            <div class="timeline-text">预训练模型时代</div>
+                            <div class="timeline-subtext">
+                                BERT、GPT-2等预训练模型出现，通过大规模无监督学习获得强大语言理解能力。
+                                模型参数量从亿级跃迁至十亿级，少样本学习能力显现。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2020-2022</div>
+                            <div class="timeline-text">大语言模型时代</div>
+                            <div class="timeline-subtext">
+                                GPT-3、ChatGPT等模型涌现，Scaling Law验证，通用AI能力初步展现。
+                                模型具备推理、代码、翻译等跨领域能力，ChatGPT月活用户突破1亿。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2023</div>
+                            <div class="timeline-text">Agent概念兴起</div>
+                            <div class="timeline-subtext">
+                                AutoGPT等自主智能体出现，LangChain生态繁荣，AI开始具备工具使用能力。
+                                RAG技术成熟，解决大模型知识更新和幻觉问题。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2024+</div>
+                            <div class="timeline-text">智能体与多模态</div>
+                            <div class="timeline-subtext">
+                                多Agent协作成为主流，专业化Agent分工明确。
+                                多模态融合，视觉+语音+文本协同工作，具身智能开始探索物理世界。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What is LLM -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path>
+                            <polyline points="12,6 12,12 16,14"></polyline>
+                        </svg>
+                        什么是大语言模型
+                    </h2>
+                    <div class="formula-box">
+                        LLM = 海量数据 + 巨量参数 + 强大算力
+                    </div>
+                    <div class="card" style="margin-top: 32px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <circle cx="12" cy="12" r="6"></circle>
+                                    <circle cx="12" cy="12" r="2" fill="#059669"></circle>
+                                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="card-title">核心本质</div>
+                        </div>
+                        <div class="card-description">
+                            大语言模型本质上是一个"下一个Token的概率预测机"。通过Scaling Law（规模法则），当数据量、参数量和算力足够大时，模型能力会产生质的飞跃，涌现出理解、推理、生成等复杂能力。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neural Network -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <circle cx="6" cy="6" r="2"></circle>
+                            <circle cx="18" cy="6" r="2"></circle>
+                            <circle cx="6" cy="18" r="2"></circle>
+                            <circle cx="18" cy="18" r="2"></circle>
+                            <line x1="9" y1="9" x2="10" y2="10"></line>
+                            <line x1="15" y1="9" x2="14" y2="10"></line>
+                            <line x1="9" y1="15" x2="10" y2="14"></line>
+                            <line x1="15" y1="15" x2="14" y2="14"></line>
+                        </svg>
+                        核心机制：神经网络
+                    </h2>
+                    
+                    <div class="neural-network">
+                        <div class="nn-diagram" id="nn-diagram">
+                            <div class="nn-layer">
+                                <div class="nn-node" id="nn-input-1">满血</div>
+                                <div class="nn-node" id="nn-input-2">苹果</div>
+                                <div class="nn-node" id="nn-input-3">手机</div>
+                                <div class="nn-layer-label">输入层</div>
+                            </div>
+                            <div class="nn-arrow">→</div>
+                            <div class="nn-layer">
+                                <div class="nn-node" id="nn-weight-1">W1</div>
+                                <div class="nn-node" id="nn-weight-2">W2</div>
+                                <div class="nn-node" id="nn-weight-3">W3</div>
+                                <div class="nn-layer-label">权重层</div>
+                            </div>
+                            <div class="nn-arrow">→</div>
+                            <div class="nn-layer">
+                                <div class="nn-node" id="nn-active-1">ReLU</div>
+                                <div class="nn-node" id="nn-active-2">Sigmoid</div>
+                                <div class="nn-layer-label">激活层</div>
+                            </div>
+                            <div class="nn-arrow">→</div>
+                            <div class="nn-layer">
+                                <div class="nn-node" id="nn-output-1">输出</div>
+                                <div class="nn-layer-label">输出层</div>
+                            </div>
+                        </div>
+
+                        <div class="nn-explanation" id="nn-explanation">
+                            <div class="nn-explanation-title">点击下方按钮开始演示</div>
+                            <div class="nn-explanation-text">
+                                神经网络由输入层、权重层、激活层和输出层组成。输入层接收原始数据，权重层对输入进行加权处理，激活层引入非线性变换，输出层产生最终结果。
+                            </div>
+                        </div>
+
+                        <button class="run-nn-btn" onclick="runNeuralNetwork()">运行神经网络演示</button>
+                    </div>
+                </div>
+
+                <!-- Attention Mechanism -->
+                <div class="section attention-section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        核心机制：自注意力机制
+                    </h2>
+
+                    <div class="original-text">
+                        <div class="original-text-label">原文</div>
+                        <div class="original-text-content">满血苹果手机搭载AI功能，这使得它很强大</div>
+                    </div>
+
+                    <div class="attention-sentence" id="attention-sentence">
+                        <span class="attention-word" onclick="handleAttention('满血')">满血</span>
+                        <span class="attention-word" onclick="handleAttention('苹果')">苹果</span>
+                        <span class="attention-word" onclick="handleAttention('手机')">手机</span>
+                        <span class="attention-word" onclick="handleAttention('搭载')">搭载</span>
+                        <span class="attention-word" onclick="handleAttention('AI')">AI</span>
+                        <span class="attention-word" onclick="handleAttention('功能')">功能</span>
+                        <span class="attention-word" onclick="handleAttention('这')">这</span>
+                        <span class="attention-word" onclick="handleAttention('使得')">使得</span>
+                        <span class="attention-word target" onclick="handleAttention('它')">它</span>
+                        <span class="attention-word" onclick="handleAttention('很')">很</span>
+                        <span class="attention-word" onclick="handleAttention('强大')">强大</span>
+                    </div>
+
+                    <div class="card" style="text-align: center;">
+                        <div style="color: #d97706; font-size: 18px; margin-bottom: 12px; font-weight: 700;" id="attention-result">"它" 指代的是：苹果手机</div>
+                        <div style="color: #6b7280; font-size: 15px; line-height: 1.7;">
+                            自注意力机制让模型能够同时关注上下文中的所有词，理解词与词之间的语义关系。点击任意词可以查看它与其他词的关联。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LLM Capabilities -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                        </svg>
+                        LLM的能力边界
+                    </h2>
+                    <div class="grid-2">
+                        <div class="card" style="min-height: 380px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none';">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                                        <polyline points="20,6 9,17 4,12"></polyline>
+                                    </svg>
+                                </div>
+                                <div class="card-title">擅长领域</div>
+                            </div>
+                            <ul style="list-style: none; color: #4b5563; line-height: 2.2;">
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #22c55e;">✓</span>
+                                    文本生成与内容创作
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #22c55e;">✓</span>
+                                    代码编写与调试辅助
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #22c55e;">✓</span>
+                                    逻辑推理与问题分析
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #22c55e;">✓</span>
+                                    多语言翻译与理解
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card" style="min-height: 380px; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='scale(1.03)';this.style.boxShadow='0 10px 30px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none';">
+                            <div class="card-header">
+                                <div class="card-icon">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    </svg>
+                                </div>
+                                <div class="card-title">需要补强</div>
+                            </div>
+                            <ul style="list-style: none; color: #4b5563; line-height: 2.2;">
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #ef4444;">✗</span>
+                                    实时信息获取能力
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #ef4444;">✗</span>
+                                    精确执行操作能力
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #ef4444;">✗</span>
+                                    私有知识整合能力
+                                </li>
+                                <li style="padding-left: 24px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #ef4444;">✗</span>
+                                    幻觉问题需要解决
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card" style="margin-top: 32px; text-align: center; background: linear-gradient(135deg, #fffbeb, #fef3c7);">
+                        <div style="color: #374151; font-size: 17px; line-height: 1.8;">
+                            <strong style="color: #111827;">结论：</strong>LLM是一个极其强大的"大脑"，但缺乏"手脚"和"实时记忆"——这就是为什么我们需要智能体。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Agent Core -->
+            <div class="slide" id="slide-2">
+                <div class="page-header">
+                    <h1 class="page-title">智能体核心</h1>
+                    <p class="page-subtitle">从概念到架构，全面理解Agent的设计与实现</p>
+                </div>
+
+                <!-- LLM vs Agent -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        定义对比：LLM vs Agent
+                    </h2>
+
+                    <div class="agent-comparison">
+                        <div class="agent-card">
+                            <div class="agent-image-container" style="background: linear-gradient(135deg, #ecfdf5, #ecfdf5);">
+                                <!-- LLM图片：可以替换成你想要的图片，把下面的img标签换成你的图片 -->
+                                <img class="icon-xl" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20brain%20neural%20network%20visualization%20blue%20cyan%20minimalist%20illustration&image_size=square" alt="LLM"/>
+                            </div>
+                            <div class="agent-title-large">LLM</div>
+                            <div class="agent-desc-large">
+                                <strong>仅仅是一个强大的大脑</strong>
+                                <ul>
+                                    <li>可以进行丰富的对话交流</li>
+                                    <li>具备强大的决策和推理能力</li>
+                                    <li>理解复杂概念和问题</li>
+                                    <li><strong>但是没有肢体，无法实际行动</strong></li>
+                                    <li>无法直接操作工具或环境</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-image-container" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">
+                                <!-- Agent图片：可以替换成你想要的图片，把下面的img标签换成你的图片 -->
+                                <img class="icon-xl" src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=AI%20agent%20robot%20with%20tools%20and%20interface%20orange%20yellow%20professional%20illustration&image_size=square" alt="Agent"/>
+                            </div>
+                            <div class="agent-title-large">Agent</div>
+                            <div class="agent-desc-large">
+                                <strong>大脑 + 钢铁般的躯体 + 工具技能</strong>
+                                <ul>
+                                    <li>同样具备强大的LLM大脑</li>
+                                    <li><strong>拥有钢铁般强壮的躯体</strong>（执行能力）</li>
+                                    <li><strong>配备各种工具和技能</strong>（知识库、API、数据库）</li>
+                                    <li>感知环境、做出决策、独立执行</li>
+                                    <li>完成复杂的多步骤任务</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Development History -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        智能体发展历程
+                    </h2>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2023年初</div>
+                            <div class="timeline-text">AutoGPT时代</div>
+                            <div class="timeline-subtext">概念验证探索阶段，Agent初步展现自主任务执行能力，但稳定性和可控性较差</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2023中</div>
+                            <div class="timeline-text">LangChain生态</div>
+                            <div class="timeline-subtext">全代码时代，提供丰富的组件库，开发者可自由组合构建Agent应用</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2023末-2024</div>
+                            <div class="timeline-text">低代码平台兴起</div>
+                            <div class="timeline-subtext">可视化编排平台出现，大幅降低Agent开发门槛，非技术人员也可参与</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2024+</div>
+                            <div class="timeline-text">生态协同与多Agent</div>
+                            <div class="timeline-subtext">多Agent协作成为主流，专业化Agent分工明确，协同完成复杂任务</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case Comparison -->
+                <div class="section phone-section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                        案例对比：预订机票
+                    </h2>
+
+                    <div class="phone-comparison">
+                        <div>
+                            <div class="phone-label">常规方式</div>
+                            <div class="phone-mockup">
+                                <div class="phone-screen">
+                                    <div class="phone-content active" id="manual-0">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+                                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                                <polyline points="12 19 5 12 12 5"></polyline>
+                                            </svg>
+                                            <div style="font-weight: 700; font-size: 16px;">机票预订</div>
+                                            <div style="width: 24px;"></div>
+                                        </div>
+                                        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                                            <div style="flex: 1; padding: 12px; background: #ecfdf5; border-radius: 8px; text-align: center; color: #059669; font-weight: 600; font-size: 14px;">单程</div>
+                                            <div style="flex: 1; padding: 12px; background: #f3f4f6; border-radius: 8px; text-align: center; color: #6b7280; font-weight: 600; font-size: 14px;">往返</div>
+                                        </div>
+                                        <div style="margin-bottom: 16px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">出发城市</div>
+                                            <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-weight: 600;">北京</div>
+                                        </div>
+                                        <div style="margin-bottom: 16px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">到达城市</div>
+                                            <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-weight: 600;">上海</div>
+                                        </div>
+                                        <div style="margin-bottom: 20px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">出发日期</div>
+                                            <div style="padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-weight: 600;">12月25日</div>
+                                        </div>
+                                        <div class="phone-btn" onclick="nextManual()">搜索航班 →</div>
+                                    </div>
+                                    <div class="phone-content" id="manual-1">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+                                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                                <polyline points="12 19 5 12 12 5"></polyline>
+                                            </svg>
+                                            <div style="font-weight: 700; font-size: 16px;">航班列表</div>
+                                            <div style="width: 24px;"></div>
+                                        </div>
+                                        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                                            <div style="padding: 8px 12px; background: #ecfdf5; border-radius: 16px; color: #059669; font-size: 13px; font-weight: 500;">推荐</div>
+                                            <div style="padding: 8px 12px; background: #f3f4f6; border-radius: 16px; color: #6b7280; font-size: 13px;">价格最低</div>
+                                            <div style="padding: 8px 12px; background: #f3f4f6; border-radius: 16px; color: #6b7280; font-size: 13px;">时间最短</div>
+                                        </div>
+                                        <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                <div style="font-weight: 700;">CA1234</div>
+                                                <div style="color: #22c55e; font-weight: 600; font-size: 14px;">¥1,280</div>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="text-align: center;">
+                                                    <div style="font-weight: 700; font-size: 18px;">08:30</div>
+                                                    <div style="font-size: 13px; color: #6b7280;">北京首都</div>
+                                                </div>
+                                                <div style="color: #9ca3af; font-size: 12px;">2小时30分</div>
+                                                <div style="text-align: center;">
+                                                    <div style="font-weight: 700; font-size: 18px;">11:00</div>
+                                                    <div style="font-size: 13px; color: #6b7280;">上海虹桥</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                <div style="font-weight: 700;">MU5678</div>
+                                                <div style="color: #f59e0b; font-weight: 600; font-size: 14px;">¥980</div>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                <div style="text-align: center;">
+                                                    <div style="font-weight: 700; font-size: 18px;">14:00</div>
+                                                    <div style="font-size: 13px; color: #6b7280;">北京大兴</div>
+                                                </div>
+                                                <div style="color: #9ca3af; font-size: 12px;">2小时15分</div>
+                                                <div style="text-align: center;">
+                                                    <div style="font-weight: 700; font-size: 18px;">16:15</div>
+                                                    <div style="font-size: 13px; color: #6b7280;">上海浦东</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="phone-btn" onclick="nextManual()">选择 CA1234 →</div>
+                                    </div>
+                                    <div class="phone-content" id="manual-2">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+                                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                                <polyline points="12 19 5 12 12 5"></polyline>
+                                            </svg>
+                                            <div style="font-weight: 700; font-size: 16px;">填写信息</div>
+                                            <div style="width: 24px;"></div>
+                                        </div>
+                                        <div style="background: linear-gradient(135deg, #ecfdf5, #ecfdf5); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                                            <div style="font-weight: 700; margin-bottom: 8px;">CA1234 · 北京-上海</div>
+                                            <div style="font-size: 14px; color: #6b7280;">12月25日 08:30-11:00</div>
+                                            <div style="margin-top: 8px; font-size: 18px; font-weight: 700; color: #059669;">¥1,280</div>
+                                        </div>
+                                        <div style="margin-bottom: 12px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">乘客姓名</div>
+                                            <input type="text" placeholder="请输入姓名" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                        </div>
+                                        <div style="margin-bottom: 12px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">身份证号</div>
+                                            <input type="text" placeholder="请输入身份证号" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                        </div>
+                                        <div style="margin-bottom: 20px;">
+                                            <div style="font-size: 13px; color: #6b7280; margin-bottom: 8px;">联系电话</div>
+                                            <input type="text" placeholder="请输入手机号" style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 14px; box-sizing: border-box;">
+                                        </div>
+                                        <div class="phone-btn" onclick="nextManual()">确认预订 →</div>
+                                    </div>
+                                    <div class="phone-content" id="manual-3">
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2">
+                                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                                <polyline points="12 19 5 12 12 5"></polyline>
+                                            </svg>
+                                            <div style="font-weight: 700; font-size: 16px;">支付订单</div>
+                                            <div style="width: 24px;"></div>
+                                        </div>
+                                        <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+                                            <div style="font-weight: 700; margin-bottom: 12px; font-size: 15px;">订单信息</div>
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                                <div style="color: #6b7280;">航班</div>
+                                                <div style="font-weight: 600;">CA1234</div>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                                <div style="color: #6b7280;">乘客</div>
+                                                <div style="font-weight: 600;">张三</div>
+                                            </div>
+                                            <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                                <div style="color: #6b7280;">票价</div>
+                                                <div style="font-weight: 600;">¥1,280</div>
+                                            </div>
+                                        </div>
+                                        <div style="font-weight: 700; margin-bottom: 12px; font-size: 14px;">选择支付方式</div>
+                                        <div style="border: 2px solid #059669; border-radius: 12px; padding: 16px; display: flex; align-items: center; margin-bottom: 12px; background: #ecfdf5;">
+                                            <div style="width: 24px; height: 24px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                                <div style="width: 12px; height: 12px; background: white; border-radius: 50%;"></div>
+                                            </div>
+                                            <div style="font-weight: 600;">支付宝</div>
+                                        </div>
+                                        <div style="border: 2px solid #e5e7eb; border-radius: 12px; padding: 16px; display: flex; align-items: center; margin-bottom: 20px;">
+                                            <div style="width: 24px; height: 24px; border: 2px solid #d1d5db; border-radius: 50%; margin-right: 12px;"></div>
+                                            <div style="font-weight: 600;">微信支付</div>
+                                        </div>
+                                        <div class="phone-btn" onclick="nextManual()">立即支付 ¥1,280 →</div>
+                                    </div>
+                                    <div class="phone-content" id="manual-4">
+                                        <div class="phone-success">
+                                            <svg class="icon-large" viewBox="0 0 64 64" fill="none">
+                                                <circle cx="32" cy="32" r="28" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="3"/>
+                                                <path d="M22 32 L28 38 L44 22" stroke="#22c55e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <div style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">预订成功！</div>
+                                            <div style="font-size: 14px; color: #6b7280; margin-bottom: 20px;">订单号 CA123420241225</div>
+                                            <div style="background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: left;">
+                                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                                                    <div style="color: #6b7280;">航班</div>
+                                                    <div style="font-weight: 600;">CA1234</div>
+                                                </div>
+                                                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                                                    <div style="color: #6b7280;">时间</div>
+                                                    <div style="font-weight: 600;">12月25日 08:30</div>
+                                                </div>
+                                            </div>
+                                            <div class="phone-btn phone-btn-secondary" onclick="resetManual()">重新演示</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="phone-label">Agent方式</div>
+                            <div class="phone-mockup">
+                                <div class="phone-screen">
+                                    <div class="phone-content active" id="agent-0">
+                                        <div class="phone-header">用户指令</div>
+                                        <div class="phone-input">帮我订一张明天北京飞上海的机票</div>
+                                        <div class="phone-btn" onclick="startAgentAutoFlow()">Agent执行 →</div>
+                                    </div>
+                                    <div class="phone-content" id="agent-1">
+                                        <div class="phone-header">执行中...</div>
+                                        <div class="phone-input" style="background: #ecfdf5;">🔍 查询航班中</div>
+                                        <div class="phone-input" style="background: #ecfdf5;">📊 对比价格中</div>
+                                    </div>
+                                    <div class="phone-content" id="agent-2">
+                                        <div class="phone-success">
+                                            <svg class="icon-large" viewBox="0 0 64 64" fill="none">
+                                                <circle cx="32" cy="32" r="28" fill="#22c55e" fill-opacity="0.1" stroke="#22c55e" stroke-width="3"/>
+                                                <path d="M22 32 L28 38 L44 22" stroke="#22c55e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                            <div style="font-size: 16px; font-weight: 700; margin-bottom: 12px;">机票已预订成功！</div>
+                                            <div style="font-size: 14px; color: #6b7280;">航班信息已发送至您的邮箱</div>
+                                            <div class="phone-btn phone-btn-secondary" style="margin-top: 20px;" onclick="resetAgent()">重新演示</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Architecture -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <polygon points="12,2 2,8 12,14 22,8"></polygon>
+                            <line x1="2" y1="18" x2="12" y2="22"></line>
+                            <line x1="22" y1="18" x2="12" y2="22"></line>
+                        </svg>
+                        智能体核心架构
+                    </h2>
+
+                    <div class="architecture-diagram">
+                        <!-- 第1层：LLM - 大的顶部卡片 -->
+                        <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                            <div class="arch-center" style="width: 50%;">
+                                <div class="arch-center-text">LLM</div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-top: 8px;">智能大脑</div>
+                            </div>
+                        </div>
+
+                        <!-- 第2层：三个等大的卡片 -->
+                        <div style="display: flex; justify-content: space-around; margin-bottom: 30px;">
+                            <div class="card" style="width: 25%; padding: 20px; text-align: center; min-height: 60px;">
+                                <div style="font-size: 16px; font-weight: 700; color: #059669;">知识检索</div>
+                            </div>
+                            <div class="card" style="width: 25%; padding: 20px; text-align: center; min-height: 60px;">
+                                <div style="font-size: 16px; font-weight: 700; color: #059669;">技能调用</div>
+                            </div>
+                            <div class="card" style="width: 25%; padding: 20px; text-align: center; min-height: 60px;">
+                                <div style="font-size: 16px; font-weight: 700; color: #059669;">记忆存储</div>
+                            </div>
+                        </div>
+
+                        <!-- 第3层：三个讲解卡片 -->
+                        <div class="arch-modules">
+                            <div class="arch-module">
+                                <div style="font-size: 24px; font-weight: 800; color: #059669; margin-bottom: 10px;">RAG</div>
+                                <div class="arch-module-title">检索增强生成</div>
+                                <div class="arch-module-desc">
+                                    <ul style="text-align: left; padding-left: 18px; margin: 0;">
+                                        <li>连接知识库和文档</li>
+                                        <li>向量相似度检索</li>
+                                        <li>减少幻觉问题</li>
+                                        <li>提供可追溯来源</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="arch-module">
+                                <div style="font-size: 24px; font-weight: 800; color: #059669; margin-bottom: 10px;">Skills</div>
+                                <div class="arch-module-title">技能系统</div>
+                                <div class="arch-module-desc">
+                                    <ul style="text-align: left; padding-left: 18px; margin: 0;">
+                                        <li>工具调用和API</li>
+                                        <li>自定义技能开发</li>
+                                        <li>插件生态系统</li>
+                                        <li>灵活可扩展</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="arch-module">
+                                <div style="font-size: 24px; font-weight: 800; color: #059669; margin-bottom: 10px;">Memory</div>
+                                <div class="arch-module-title">记忆系统</div>
+                                <div class="arch-module-desc">
+                                    <ul style="text-align: left; padding-left: 18px; margin: 0;">
+                                        <li>短期对话记忆</li>
+                                        <li>长期用户偏好</li>
+                                        <li>上下文连续性</li>
+                                        <li>经验学习</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Development and Practice -->
+            <div class="slide" id="slide-3">
+                <div class="page-header">
+                    <h1 class="page-title">智能体技术总览</h1>
+                    <p class="page-subtitle">从理论到落地，深入了解RAG技术、Skills系统和多智能体设计</p>
+                </div>
+
+                <!-- RAG Technology -->
+                <div class="section rag-section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                        RAG检索增强生成技术
+                    </h2>
+
+                    <div class="card" style="margin-bottom: 32px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                    <path d="M2 17l10 5 10-5"></path>
+                                    <path d="M2 12l10 5 10-5"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">什么是RAG？</div>
+                        </div>
+                        <div class="card-description" style="line-height: 1.8;">
+                            RAG (Retrieval-Augmented Generation) 是一种将信息检索与文本生成相结合的技术。
+                            通过先从知识库中检索相关信息，再将检索到的内容作为上下文提供给LLM进行回答，
+                            从而大幅提升回答的准确性和可信度，同时有效减少幻觉问题。
+                        </div>
+                    </div>
+
+                    <div class="rag-source-doc">
+                        <div class="rag-source-label">知识库源文档</div>
+                        <div class="rag-source-content">小明是我所的员工，专精于婚姻民事诉讼相关领域</div>
+                    </div>
+
+                    <div class="rag-flow">
+                        <div class="rag-step" id="rag-0">
+                            <div class="rag-step-number">01</div>
+                            <div class="rag-step-title">用户输入</div>
+                            <div class="rag-step-content" id="rag-c0"></div>
+                        </div>
+                        <div class="rag-step" id="rag-1">
+                            <div class="rag-step-number">02</div>
+                            <div class="rag-step-title">向量化</div>
+                            <div class="rag-step-content" id="rag-c1"></div>
+                        </div>
+                        <div class="rag-step" id="rag-2">
+                            <div class="rag-step-number">03</div>
+                            <div class="rag-step-title">检索知识库</div>
+                            <div class="rag-step-content" id="rag-c2"></div>
+                        </div>
+                        <div class="rag-step" id="rag-3">
+                            <div class="rag-step-number">04</div>
+                            <div class="rag-step-title">注入Prompt</div>
+                            <div class="rag-step-content" id="rag-c3"></div>
+                        </div>
+                        <div class="rag-step" id="rag-4">
+                            <div class="rag-step-number">05</div>
+                            <div class="rag-step-title">生成答案</div>
+                            <div class="rag-step-content" id="rag-c4"></div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 32px;">
+                        <button class="rag-btn" onclick="runRAGDemo()">运行RAG演示</button>
+                    </div>
+
+                    <div class="rag-output" id="rag-output">
+                        <div class="rag-output-label">最终答案：</div>
+                        <div class="rag-output-content" id="rag-answer"></div>
+                    </div>
+                </div>
+
+                <!-- Skills System -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M12 2L15 8L22 9L17 14L18 21L12 18L6 21L7 14L2 9L9 8L12 2z"></path>
+                        </svg>
+                        Skills技能系统详解
+                    </h2>
+
+                    <div class="skills-intro">
+                        <h3 style="color: #059669; margin-bottom: 16px;">什么是Skills？</h3>
+                        <p style="color: #4b5563; line-height: 1.8; margin-bottom: 16px;">
+                            Skills是智能体的"手脚"，它们是可重用的功能模块，让Agent能够执行具体的任务。
+                            每个Skill都包含输入参数、执行逻辑和输出结果，可以独立调用也可以组合使用。
+                        </p>
+                        <h4 style="color: #059669; margin-bottom: 12px;">Skills的核心价值：</h4>
+                        <ul style="color: #4b5563; padding-left: 20px; line-height: 1.8;">
+                            <li>模块化设计，易于维护和扩展</li>
+                            <li>可重用性，同一Skill可用于多个场景</li>
+                            <li>标准化接口，方便集成外部API</li>
+                            <li>安全可控，权限可细粒度管理</li>
+                        </ul>
+                    </div>
+
+                    <h3 style="color: #111827; margin-bottom: 20px; font-size: 20px;">OpenClaw Skills生态</h3>
+
+                    <div class="skills-grid">
+                        <div class="skill-card">
+                            <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-radius: 12px; margin: 0 auto 12px;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                            </div>
+                            <div class="skill-card-title">网页搜索</div>
+                            <div class="skill-card-desc">实时搜索互联网获取最新信息</div>
+                        </div>
+                        <div class="skill-card">
+                            <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 12px; margin: 0 auto 12px;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M3 5v6a9 3 0 0 0 18 0V5"></path>
+                                    <path d="M3 11v6a9 3 0 0 0 18 0v-6"></path>
+                                </svg>
+                            </div>
+                            <div class="skill-card-title">数据库查询</div>
+                            <div class="skill-card-desc">SQL查询、数据库读写操作</div>
+                        </div>
+                        <div class="skill-card">
+                            <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #dcfce7, #bbf7d0); border-radius: 12px; margin: 0 auto 12px;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </div>
+                            <div class="skill-card-title">文档处理</div>
+                            <div class="skill-card-desc">文档解析、内容提取、格式转换</div>
+                        </div>
+                        <div class="skill-card">
+                            <div style="display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background: linear-gradient(135deg, #fce7f3, #fbcfe8); border-radius: 12px; margin: 0 auto 12px;">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#9f1239" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </div>
+                            <div class="skill-card-title">邮件发送</div>
+                            <div class="skill-card-desc">邮件通知、批量发送、模板</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 32px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <polyline points="16 18 22 12 16 6"></polyline>
+                                    <polyline points="8 6 2 12 8 18"></polyline>
+                                </svg>
+                            </div>
+                            <div class="card-title">Skill定义格式示例</div>
+                        </div>
+                        <div class="code-block">
+<span style="color:#6b7280;">---</span><br/>
+<span style="color:#059669;">name</span><span style="color:#374151;">:</span> crawler<br/>
+<span style="color:#059669;">description</span><span style="color:#374151;">:</span> 龙虾招聘网站爬虫<br/>
+<span style="color:#059669;">parameters</span><span style="color:#374151;">:</span><br/>
+<span style="color:#374151;">    - </span><span style="color:#059669;">name</span><span style="color:#374151;">:</span> keyword<br/>
+<span style="color:#374151;">      </span><span style="color:#059669;">type</span><span style="color:#374151;">:</span> string<br/>
+<span style="color:#374151;">      </span><span style="color:#059669;">required</span><span style="color:#374151;">:</span> <span style="color:#d97706;">true</span><br/>
+<span style="color:#374151;">    - </span><span style="color:#059669;">name</span><span style="color:#374151;">:</span> location<br/>
+<span style="color:#374151;">      </span><span style="color:#059669;">type</span><span style="color:#374151;">:</span> string<br/>
+<span style="color:#374151;">      </span><span style="color:#059669;">default</span><span style="color:#374151;">:</span> <span style="color:#06b6d4;">北京</span><br/>
+<span style="color:#6b7280;">---</span><br/>
+<span style="color:#8b5cf6;">def</span> execute(keyword, location):<br/>
+<span style="color:#374151;">    </span>url = f<span style="color:#06b6d4;">"https://example.com/jobs?keyword={keyword}&loc={location}"</span><br/>
+<span style="color:#374151;">    </span>data = fetch_data(url)<br/>
+<span style="color:#374151;">    </span><span style="color:#8b5cf6;">return</span> {<br/>
+<span style="color:#374151;">        </span><span style="color:#06b6d4;">"success"</span><span style="color:#374151;">:</span> <span style="color:#d97706;">True</span>,<br/>
+<span style="color:#374151;">        </span><span style="color:#06b6d4;">"results"</span><span style="color:#374151;">:</span> data<br/>
+<span style="color:#374151;">    }</span><br/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multi-Agent System -->
+                <div class="section multi-agent-section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <circle cx="15" cy="7" r="4"></circle>
+                            <path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                            <path d="M21 21v-2a4 4 0 0 0-3-3.87"></path>
+                        </svg>
+                        多智能体系统设计
+                    </h2>
+
+                    <!-- 多智能体图片 -->
+                    <div style="text-align: center; margin-bottom: 32px;">
+                        <img src="multi-agent.png" alt="多智能体系统设计" style="max-width: 100%; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+                    </div>
+
+                    <div class="agent-explanation">
+                        <div class="agent-explanation-card">
+                            <div class="agent-explanation-title">
+                                <!-- OpenClaw：小龙虾 -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20red%20lobster%20cartoon%20illustration&image_size=square" style="width: 24px; height: 24px; border-radius: 4px;">
+                                OpenClaw架构
+                            </div>
+                            <div class="agent-explanation-content">
+                                <strong style="color: #111827;">特点：</strong>
+                                <ul>
+                                    <li><strong>可视化编排界面：</strong>拖拽式工作流设计，直观易用</li>
+                                    <li><strong>低代码Agent构建：</strong>减少重复代码，提升开发效率</li>
+                                    <li><strong>内置丰富的Skills库：</strong>覆盖常见业务场景，开箱即用</li>
+                                    <li><strong>企业级权限管理：</strong>角色划分，数据隔离，安全可控</li>
+                                    <li><strong>支持实时监控：</strong>Agent执行状态可视化，便于调试</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="agent-explanation-card">
+                            <div class="agent-explanation-title">
+                                <!-- Hermes：少女头像 -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20anime%20girl%20face%20cartoon%20portrait%20illustration&image_size=square" style="width: 24px; height: 24px; border-radius: 4px;">
+                                Hermes架构
+                            </div>
+                            <div class="agent-explanation-content">
+                                <strong style="color: #111827;">特点：</strong>
+                                <ul>
+                                    <li><strong>Function Calling优先：</strong>原生支持工具调用，生态成熟</li>
+                                    <li><strong>深度工具集成：</strong>无缝对接各类API、数据库、系统</li>
+                                    <li><strong>结构化输出：</strong>JSON格式输出，便于程序处理</li>
+                                    <li><strong>多轮对话优化：</strong>上下文记忆完善，对话连贯性好</li>
+                                    <li><strong>容错能力强：</strong>自动重试机制，提高稳定性</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="agent-explanation-card">
+                            <div class="agent-explanation-title">
+                                <!-- Kimi：Kimi公司logo -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Kimi%20AI%20logo%20minimal%20design%20black%20and%20white&image_size=square" style="width: 24px; height: 24px; border-radius: 4px;">
+                                Kimi 2.6架构
+                            </div>
+                            <div class="agent-explanation-content">
+                                <strong style="color: #111827;">特点：</strong>
+                                <ul>
+                                    <li><strong>超长上下文处理：</strong>支持百万级Token，长文档分析能力强</li>
+                                    <li><strong>国产大模型：</strong>本土化支持好，合规性高</li>
+                                    <li><strong>企业数据安全：</strong>私有化部署选项，数据不出门</li>
+                                    <li><strong>API友好设计：</strong>接口简洁，文档完善</li>
+                                    <li><strong>成本效益优：</strong>价格策略合理，适合大规模使用</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        总结与展望
+                    </h2>
+
+                    <div class="grid-3">
+                        <div class="step-box">
+                            <div class="step-number">01</div>
+                            <div class="step-title">找高频简单场景</div>
+                            <div class="step-desc">
+                                从Low Hanging Fruit切入<br>
+                                选择重复性高、规则明确的场景<br>
+                                快速验证业务价值，建立信心
+                            </div>
+                        </div>
+                        <div class="step-box">
+                            <div class="step-number">02</div>
+                            <div class="step-title">构建原子技能</div>
+                            <div class="step-desc">
+                                模块化设计原则<br>
+                                可复用的基础技能库<br>
+                                逐步积累，持续迭代
+                            </div>
+                        </div>
+                        <div class="step-box">
+                            <div class="step-number">03</div>
+                            <div class="step-title">迭代复杂链路</div>
+                            <div class="step-desc">
+                                组合基础技能构建流程<br>
+                                闭环优化，持续改进<br>
+                                最终交付端到端解决方案
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top: 40px; text-align: center; background: linear-gradient(135deg, #ecfdf5, #ecfdf5);">
+                        <h3 style="color: #111827; margin-bottom: 20px;">未来展望</h3>
+                        <div class="grid-3" style="margin: 0;">
+                            <div style="padding: 16px;">
+                                <!-- 具身智能：机器人的头 -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=cute%20robot%20head%20cartoon%20illustration&image_size=square" class="icon-large" style="width: 48px; height: 48px; border-radius: 8px;">
+                                <div style="font-weight: 700; margin-top: 12px;">具身智能</div>
+                                <div style="color: #6b7280; font-size: 14px;">Embodied AI<br>Agent控制物理设备</div>
+                            </div>
+                            <div style="padding: 16px;">
+                                <!-- 自主进化：一本书 -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=book%20cartoon%20illustration%20simple%20design&image_size=square" class="icon-large" style="width: 48px; height: 48px; border-radius: 8px;">
+                                <div style="font-weight: 700; margin-top: 12px;">自主进化</div>
+                                <div style="color: #6b7280; font-size: 14px;">Self-evolving<br>Agent自我学习优化</div>
+                            </div>
+                            <div style="padding: 16px;">
+                                <!-- 多模态协同：多box图案 -->
+                                <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=multiple%20boxes%20stacked%20colorful%20cartoon%20illustration&image_size=square" class="icon-large" style="width: 48px; height: 48px; border-radius: 8px;">
+                                <div style="font-weight: 700; margin-top: 12px;">多模态协同</div>
+                                <div style="color: #6b7280; font-size: 14px;">Multi-modal<br>视觉+语音+文本融合</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Practical Cases -->
+            <div class="slide" id="slide-4">
+                <div class="page-header">
+                    <h1 class="page-title">实战案例</h1>
+                    <p class="page-subtitle">从理论到落地：三个企业级智能体应用场景</p>
+                </div>
+
+                <!-- Case 1 -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M3 7V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V7M3 17V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V17M5 7H19M5 17H19M5 12H19"></path>
+                        </svg>
+                        实战案例一：文档整合与输出
+                    </h2>
+
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                                    <path d="M13 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V9L13 2Z"></path>
+                                    <path d="M13 2V9H20"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">业务场景：年终汇总汇报</div>
+                        </div>
+                        <div class="card-description">
+                            面对10份不同的周报，需要提取关键KPI并生成一份PPT汇报。传统方式需要人工阅读、整理、排版，耗时耗力。
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 24px; background: #ffffff;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                    <path d="M2 17l10 5 10-5"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">智能体构建逻辑</div>
+                        </div>
+                        <div class="grid-2" style="margin-top: 20px;">
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">文档读取</div>
+                                <div style="font-size: 14px; color: #4b5563;">支持PDF、Word、Excel、PPT等多格式解析</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">核心信息提取</div>
+                                <div style="font-size: 14px; color: #4b5563;">自动识别KPI、项目里程碑、关键数据</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">结构化汇总</div>
+                                <div style="font-size: 14px; color: #4b5563;">数据清洗、去重、按业务逻辑重组</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">PPT模板填充</div>
+                                <div style="font-size: 14px; color: #4b5563;">自动生成图表、排版、一键导出</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 2 -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        实战案例二：定时任务与IM触达
+                    </h2>
+
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <path d="M18 8A6 6 0 0 0 6 8C6 11.3137 8.68629 14 12 14C15.3137 14 18 11.3137 18 8Z"></path>
+                                    <path d="M12 14V21"></path>
+                                    <path d="M8 21H16"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">业务场景：关键指标自动预警</div>
+                        </div>
+                        <div class="card-description">
+                            每天早上9点，Agent自动检查数据库，若某指标异常，立即发送消息给负责人。避免人工遗漏，确保问题及时响应。
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="12" y1="10" x2="12" y2="14"></line>
+                                    <line x1="10" y1="12" x2="14" y2="12"></line>
+                                </svg>
+                            </div>
+                            <div class="card-title">智能体构建逻辑</div>
+                        </div>
+                        <div class="grid-2" style="margin-top: 20px;">
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">定时触发</div>
+                                <div style="font-size: 14px; color: #4b5563;">Cron调度，按指定时间自动启动任务</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">SQL查询</div>
+                                <div style="font-size: 14px; color: #4b5563;">连接业务数据库，执行查询获取数据</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">条件判断</div>
+                                <div style="font-size: 14px; color: #4b5563;">阈值比对、趋势分析、异常检测逻辑</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">IM推送</div>
+                                <div style="font-size: 14px; color: #4b5563;">飞书/钉钉/企业微信消息通知</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 3 -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <path d="M3 9H21"></path>
+                            <path d="M3 15H21"></path>
+                            <path d="M9 3V21"></path>
+                        </svg>
+                        实战案例三：异步操作与多模型驱动
+                    </h2>
+
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <path d="M21 10H13V3H3V11H11V21H21V10Z"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">业务场景：深度市场分析报告</div>
+                        </div>
+                        <div class="card-description">
+                            分析某行业竞争对手，需搜索大量网页、对比数据、撰写长文（耗时久且复杂）。传统方式需要多人协作，多日完成。
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <div class="card-icon">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                                    <path d="M13 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V9L13 2Z"></path>
+                                    <path d="M13 2V9H20"></path>
+                                </svg>
+                            </div>
+                            <div class="card-title">智能体构建逻辑</div>
+                        </div>
+                        <div class="grid-3" style="margin-top: 20px;">
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">任务分发</div>
+                                <div style="font-size: 14px; color: #4b5563;">按分析维度拆解给多个Worker并行执行</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">异步执行</div>
+                                <div style="font-size: 14px; color: #4b5563;">提交任务即返回Ticket，支持多路并发</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">结果轮询</div>
+                                <div style="font-size: 14px; color: #4b5563;">定时检查子任务完成状态和执行进度</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">汇总质检</div>
+                                <div style="font-size: 14px; color: #4b5563;">Manager角色统一汇总结果并审核</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">输出报告</div>
+                                <div style="font-size: 14px; color: #4b5563;">格式化输出，支持Markdown/Word/PPT</div>
+                            </div>
+                            <div style="text-align: left; padding: 12px; border-radius: 8px; background: #ecfdf5;">
+                                <div style="font-weight: 700; color: #059669; margin-bottom: 8px;">多模型驱动</div>
+                                <div style="font-size: 14px; color: #4b5563;">根据任务智能路由到最合适的模型</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bottom Fixed Navigation -->
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: #1f2937; padding: 16px 60px; display: flex; justify-content: center; gap: 8px; z-index: 999;">
+        <button id="bottom-0" style="padding: 12px 32px; background: transparent; color: #9ca3af; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s;" onclick="goToSlide(0);">首页</button>
+        <button id="bottom-1" style="padding: 12px 32px; background: transparent; color: #9ca3af; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s;" onclick="goToSlide(1);">基础概念</button>
+        <button id="bottom-2" style="padding: 12px 32px; background: transparent; color: #9ca3af; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s;" onclick="goToSlide(2);">智能体核心</button>
+        <button id="bottom-3" style="padding: 12px 32px; background: transparent; color: #9ca3af; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s;" onclick="goToSlide(3);">技术总览</button>
+        <button id="bottom-4" style="padding: 12px 32px; background: transparent; color: #9ca3af; border: none; font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s;" onclick="goToSlide(4);">实战案例</button>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>← 上一页</button>
+        <button class="nav-btn primary" id="next-btn" onclick="nextSlide()">下一页 →</button>
+    </div>
+
+    <div class="page-indicator" id="page-indicator">第 1 / 5 页</div>
+
     <script>
-      window.location.replace("./index.html" + window.location.hash);
+        // Generate background animated elements
+        function generateBgLines() {
+            const container = document.getElementById('bgLines');
+            
+            // Generate lines (20)
+            for (let i = 0; i < 20; i++) {
+                const line = document.createElement('div');
+                line.className = 'bg-line';
+                
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const width = 50 + Math.random() * 100;
+                const height = 1 + Math.random() * 2;
+                
+                line.style.left = `${x}%`;
+                line.style.top = `${y}%`;
+                line.style.width = `${width}px`;
+                line.style.height = `${height}px`;
+                line.style.animationDelay = `${Math.random() * 8}s`;
+                line.style.animationDuration = `${10 + Math.random() * 15}s`;
+                
+                container.appendChild(line);
+            }
+            
+            // Generate circles (12)
+            for (let i = 0; i < 12; i++) {
+                const circle = document.createElement('div');
+                circle.className = 'bg-circle';
+                
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                const size = 80 + Math.random() * 150;
+                
+                circle.style.left = `${x}%`;
+                circle.style.top = `${y}%`;
+                circle.style.width = `${size}px`;
+                circle.style.height = `${size}px`;
+                circle.style.animationDelay = `${Math.random() * 10}s`;
+                circle.style.animationDuration = `${15 + Math.random() * 20}s`;
+                
+                container.appendChild(circle);
+            }
+            
+            // Generate dots (40)
+            for (let i = 0; i < 40; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'bg-dot';
+                
+                const x = Math.random() * 100;
+                const y = Math.random() * 100;
+                
+                dot.style.left = `${x}%`;
+                dot.style.top = `${y}%`;
+                dot.style.animationDelay = `${Math.random() * 7}s`;
+                dot.style.animationDuration = `${8 + Math.random() * 12}s`;
+                
+                container.appendChild(dot);
+            }
+        }
+        
+        generateBgLines();
+
+        // Navbar scroll effect
+        const nav = document.querySelector('.top-nav');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 20) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+        
+        let currentSlide = 0;
+        const totalSlides = 5;
+        let manualStep = 0;
+        let agentStep = 0;
+        let nnStep = 0;
+        const nnSteps = ['input', 'weight', 'active', 'output'];
+
+        function updateActiveMenu() {
+            document.querySelectorAll('.nav-link').forEach((link, idx) => {
+                link.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link')[currentSlide].classList.add('active');
+            
+            // Update bottom navigation
+            for (let i = 0; i < 5; i++) {
+                const btn = document.getElementById(`bottom-${i}`);
+                if (i === currentSlide) {
+                    btn.style.background = '#374151';
+                    btn.style.color = '#34d399';
+                } else {
+                    btn.style.background = 'transparent';
+                    btn.style.color = '#9ca3af';
+                }
+            }
+        }
+
+        function goToSlide(slideIndex) {
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            currentSlide = slideIndex;
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            
+            // 翻页后自动滚动到页面顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            updateNavigationButtons();
+            updateActiveMenu();
+            updatePageIndicator();
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+
+        function updateNavigationButtons() {
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function updatePageIndicator() {
+            document.getElementById('page-indicator').textContent = `第 ${currentSlide + 1} / ${totalSlides} 页`;
+        }
+
+        function nextManual() {
+            if (manualStep < 4) {
+                document.getElementById(`manual-${manualStep}`).classList.remove('active');
+                manualStep++;
+                document.getElementById(`manual-${manualStep}`).classList.add('active');
+            }
+        }
+
+        function resetManual() {
+            document.getElementById(`manual-${manualStep}`).classList.remove('active');
+            manualStep = 0;
+            document.getElementById(`manual-${manualStep}`).classList.add('active');
+        }
+
+        async function startAgentAutoFlow() {
+            document.getElementById(`agent-${agentStep}`).classList.remove('active');
+            agentStep = 1;
+            document.getElementById(`agent-${agentStep}`).classList.add('active');
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            document.getElementById(`agent-${agentStep}`).classList.remove('active');
+            agentStep = 2;
+            document.getElementById(`agent-${agentStep}`).classList.add('active');
+        }
+
+        function resetAgent() {
+            document.getElementById(`agent-${agentStep}`).classList.remove('active');
+            agentStep = 0;
+            document.getElementById(`agent-${agentStep}`).classList.add('active');
+        }
+
+        function handleAttention(word) {
+            const words = document.querySelectorAll('.attention-word');
+            words.forEach(w => w.classList.remove('target', 'connected'));
+            
+            event.target.classList.add('target');
+            
+            if (word === '它') {
+                const appleWord = Array.from(words).find(w => w.textContent === '苹果');
+                const phoneWord = Array.from(words).find(w => w.textContent === '手机');
+                if (appleWord) appleWord.classList.add('connected');
+                if (phoneWord) phoneWord.classList.add('connected');
+                document.getElementById('attention-result').textContent = '"它" 指代的是：苹果手机';
+            }
+        }
+
+        function runNeuralNetwork() {
+            if (nnStep >= nnSteps.length) {
+                // Reset
+                nnStep = 0;
+                const explanation = document.getElementById('nn-explanation');
+                const nodes = document.querySelectorAll('.nn-node');
+                nodes.forEach(node => node.classList.remove('active'));
+                explanation.innerHTML = '<div class="nn-explanation-title">点击下方按钮开始演示</div><div class="nn-explanation-text">神经网络由输入层、权重层、激活层和输出层组成。输入层接收原始数据，权重层对输入进行加权处理，激活层引入非线性变换，输出层产生最终结果。</div>';
+                document.querySelector('.run-nn-btn').textContent = '运行神经网络演示';
+                return;
+            }
+
+            const currentStep = nnSteps[nnStep];
+            const explanation = document.getElementById('nn-explanation');
+            const nodes = document.querySelectorAll('.nn-node');
+
+            nodes.forEach(node => node.classList.remove('active'));
+
+            if (currentStep === 'input') {
+                explanation.innerHTML = '<div class="nn-explanation-title">输入层</div><div class="nn-explanation-text">输入层接收原始数据："满血苹果手机"。每个词会被转换成向量表示，作为神经网络的输入。</div>';
+                document.getElementById('nn-input-1').classList.add('active');
+                document.getElementById('nn-input-2').classList.add('active');
+                document.getElementById('nn-input-3').classList.add('active');
+            } else if (currentStep === 'weight') {
+                explanation.innerHTML = '<div class="nn-explanation-title">权重层</div><div class="nn-explanation-text">权重层对输入进行加权处理，学习词之间的关联。例如：给"苹果"和"手机"更高的权重，让模型理解它们是紧密相关的，而"满血"是描述手机状态的。</div>';
+                document.getElementById('nn-weight-1').classList.add('active');
+                document.getElementById('nn-weight-2').classList.add('active');
+                document.getElementById('nn-weight-3').classList.add('active');
+            } else if (currentStep === 'active') {
+                explanation.innerHTML = '<div class="nn-explanation-title">激活层</div><div class="nn-explanation-text">激活层引入非线性变换，提取深层语义特征。ReLU函数会保留重要的特征（比如"苹果手机"的核心含义），过滤掉不重要的噪声。</div>';
+                document.getElementById('nn-active-1').classList.add('active');
+                document.getElementById('nn-active-2').classList.add('active');
+            } else if (currentStep === 'output') {
+                explanation.innerHTML = '<div class="nn-explanation-title">输出层</div><div class="nn-explanation-text">输出层产生最终结果：理解为"一部功能强大的智能手机"。经过多层处理，神经网络把"满血苹果手机"理解为一款配备了AI能力的强大手机。</div>';
+                document.getElementById('nn-output-1').classList.add('active');
+                document.querySelector('.run-nn-btn').textContent = '重新演示';
+            }
+
+            nnStep++;
+        }
+
+        async function runRAGDemo() {
+            const ragSteps = [
+                { id: 0, content: "小明是一位律师，我想了解他的专业领域" },
+                { id: 1, content: "将问题转换为向量表示" },
+                { id: 2, content: "在知识库中检索：找到相关文档，其中提到小明专精于婚姻民事诉讼相关领域" },
+                { id: 3, content: "将检索到的知识注入Prompt：根据以下信息回答...\n参考资料：小明是我所的员工，专精于婚姻民事诉讼相关领域" },
+                { id: 4, content: "基于检索到的知识生成答案" }
+            ];
+
+            for (let i = 0; i < ragSteps.length; i++) {
+                const step = ragSteps[i];
+                const element = document.getElementById(`rag-${step.id}`);
+                const contentElement = document.getElementById(`rag-c${step.id}`);
+                
+                element.classList.add('active');
+                contentElement.textContent = step.content;
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            const outputDiv = document.getElementById('rag-output');
+            const answerDiv = document.getElementById('rag-answer');
+            outputDiv.classList.add('active');
+            answerDiv.textContent = '小明是我所的员工，他专精于婚姻民事诉讼相关领域，在这一领域有丰富的经验。';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateNavigationButtons();
+            updatePageIndicator();
+        });
     </script>
-  </head>
-  <body>
-    <p><a href="./index.html">Open course demo</a></p>
-  </body>
+</body>
 </html>
